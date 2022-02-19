@@ -23,11 +23,11 @@ func pkgErrors(at, depth int) error {
 	return pkgErrors(at+1, depth)
 }
 
-func golibErrors(at, depth int) error {
+func myErrors(at, depth int) error {
 	if at >= depth {
 		return WithCode(New("ye error"), 1)
 	}
-	return golibErrors(at+1, depth)
+	return myErrors(at+1, depth)
 }
 
 // GlobalE is an exported global to store the result of benchmark results,
@@ -61,8 +61,8 @@ func BenchmarkErrors(b *testing.B) {
 			part = "pkg/errors"
 			f = pkgErrors
 		case "errors":
-			part = "golib/errors"
-			f = golibErrors
+			part = "my/errors"
+			f = myErrors
 		default:
 		}
 		name := fmt.Sprintf("%s-stack-%d", part, r.stack)
