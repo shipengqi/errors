@@ -6,12 +6,12 @@ import (
 	"sync"
 )
 
-type causer interface {
-	Cause() error
+type Coder interface {
+	Code() int
 }
 
-type coder interface {
-	Code() int
+type causer interface {
+	Cause() error
 }
 
 const (
@@ -52,9 +52,14 @@ func Register(code int, msg string) error {
 	}
 }
 
+// RegisterC registers a Coder.
+func RegisterC(code Coder) {
+	register(code.Code())
+}
+
 // IsCode reports whether any error in err's contains the given code.
 func IsCode(err error, code int) bool {
-	if v, ok := err.(coder); ok {
+	if v, ok := err.(Coder); ok {
 		if v.Code() == code {
 			return true
 		}
