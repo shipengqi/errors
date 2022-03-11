@@ -19,6 +19,13 @@ func TestRegisterf(t *testing.T) {
 	t.Log(err.Error())
 }
 
+func TestRegisterC(t *testing.T) {
+	c := &withCode{code: 2, cause: fmt.Errorf("test %s", "SUCCESS")}
+	RegisterC(c)
+	defer unregister(2)
+	t.Log(c.Error())
+}
+
 func TestRegisterPanic(t *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
