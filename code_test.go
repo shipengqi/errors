@@ -20,6 +20,16 @@ func TestRegister(t *testing.T) {
 	assert.Equal(t, "SUCCESS", mockSuccessCode.String())
 	assert.Equal(t, 200, mockSuccessCode.HTTPStatus())
 	assert.Equal(t, "", mockSuccessCode.Reference())
+
+	t.Run("HTTP status 0", func(t *testing.T) {
+		mockSuccessCode2 := defaultCoder{
+			code:   3,
+			msg:    "SUCCESS",
+		}
+		Register(mockSuccessCode2)
+		defer unregister(mockSuccessCode2)
+		assert.Equal(t, 500, mockSuccessCode2.HTTPStatus())
+	})
 }
 
 func TestRegisterPanic(t *testing.T) {
@@ -35,6 +45,24 @@ func TestRegisterPanic(t *testing.T) {
 		status: 200,
 		msg:    "error",
 	}
+	Register(mockErrCode)
+}
+
+func TestRegisterPanic2(t *testing.T) {
+	defer func() {
+		if err := recover(); err != nil {
+			assert.Equal(t, err, "code [3] already registered")
+		} else {
+			t.Fatal("no panic")
+		}
+	}()
+	mockErrCode := defaultCoder{
+		code:   3,
+		status: 200,
+		msg:    "error",
+	}
+	Register(mockErrCode)
+	defer unregister(mockErrCode)
 	Register(mockErrCode)
 }
 

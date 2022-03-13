@@ -59,7 +59,7 @@ func Register(code Coder) {
 		panic(fmt.Sprintf("code `%d` is reserved by `github.com/shipengqi/errors` as Unknown Code", code.Code()))
 	}
 	if _, ok := _codes[code.Code()]; ok {
-		panic(fmt.Sprintf("code [%d] already registered", code))
+		panic(fmt.Sprintf("code [%d] already registered", code.Code()))
 	}
 	mux.Lock()
 	defer mux.Unlock()
