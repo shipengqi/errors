@@ -1,7 +1,7 @@
 # errors
 
 Package errors provides simple error handling primitives.
-Migrated from [golib](github.com/shipengqi/golib).
+Migrated from [golib](https://github.com/shipengqi/golib).
 
 Based on [github.com/pkg/errors](https://github.com/pkg/errors), and fully compatible with `github.com/pkg/errors`.
 
