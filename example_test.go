@@ -49,9 +49,9 @@ func ExampleWithCode() {
 	// Output: code: 1: whoops
 }
 
-func ExampleWithCodef() {
+func ExampleWrapC() {
 	cause := New("whoops")
-	err := WithCodef(cause, 1, "oh %s", "noes")
+	err := WrapC(cause, 1, "oh %s", "noes")
 	fmt.Println(err)
 
 	// Output: code: 1: oh noes: whoops

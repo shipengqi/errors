@@ -1,6 +1,7 @@
 package errors
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 
@@ -8,65 +9,52 @@ import (
 )
 
 func TestRegister(t *testing.T) {
-	err := Register(2, "SUCCESS")
-	defer unregister(2)
-	t.Log(err.Error())
-}
-
-func TestRegisterf(t *testing.T) {
-	err := Registerf(2, "test %s", "SUCCESS")
-	defer unregister(2)
-	t.Log(err.Error())
-}
-
-func TestRegisterC(t *testing.T) {
-	c := &withCode{code: 2, cause: fmt.Errorf("test %s", "SUCCESS")}
-	RegisterC(c)
-	defer unregister(2)
-	t.Log(c.Error())
+	mockSuccessCode := defaultCoder{
+		code: 0,
+		status: 200,
+		msg: "SUCCESS",
+	}
+	Register(mockSuccessCode)
+	defer unregister(mockSuccessCode)
 }
 
 func TestRegisterPanic(t *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			assert.Equal(t, err, "[0] already registered")
+			assert.Equal(t, err, "code `1` is reserved by `github.com/shipengqi/errors` as Unknown Code")
 		} else {
 			t.Fatal("no panic")
 		}
 	}()
-	_ = Register(0, "SUCCESS")
-}
-
-func TestRegisterfPanic(t *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			assert.Equal(t, err, "[0] already registered")
-		} else {
-			t.Fatal("no panic")
-		}
-	}()
-	_ = Registerf(0, "test %s", "SUCCESS")
+	mockErrCode := defaultCoder{
+		code: 1,
+		status: 200,
+		msg: "error",
+	}
+	Register(mockErrCode)
 }
 
 func TestIsCode(t *testing.T) {
+	ok := WithCode(errors.New("ok"), 0)
+	errUnknown := WithCode(errors.New(unknown), 1)
 	type run struct {
 		expected bool
 		code     int
 		err      error
 	}
 	runs := []run{
-		{true, 0, OK},
-		{false, 0, ErrUnknown},
-		{true, 1, ErrUnknown},
-		{true, 1, WithCode(ErrUnknown, 2)},
+		{true, 0, ok},
+		{false, 0, errUnknown},
+		{true, 1, errUnknown},
+		{true, 1, WithCode(errUnknown, 2)},
 		{true, 1, WithCode(New("test1"), 1)},
 		{true, 1, WithCode(WithMessage(New("test2"), "msg2"), 1)},
-		{true, 1, WithMessage(ErrUnknown, "msg3")},
-		{true, 1, WithMessage(WithCode(ErrUnknown, 2), "msg4")},
-		{true, 1, Wrap(ErrUnknown, "msg5")},
-		{true, 1, Wrap(WithCode(WithCode(ErrUnknown, 2), 3), "msg6")},
-		{true, 2, Wrap(WithCode(WithCode(ErrUnknown, 2), 3), "msg7")},
-		{true, 3, Wrap(WithCode(WithCode(ErrUnknown, 2), 3), "msg8")},
+		{true, 1, WithMessage(errUnknown, "msg3")},
+		{true, 1, WithMessage(WithCode(errUnknown, 2), "msg4")},
+		{true, 1, Wrap(errUnknown, "msg5")},
+		{true, 1, Wrap(WithCode(WithCode(errUnknown, 2), 3), "msg6")},
+		{true, 2, Wrap(WithCode(WithCode(errUnknown, 2), 3), "msg7")},
+		{true, 3, Wrap(WithCode(WithCode(errUnknown, 2), 3), "msg8")},
 	}
 	for _, r := range runs {
 		got := IsCode(r.err, r.code)

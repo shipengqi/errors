@@ -1,65 +1,94 @@
 package errors
 
 import (
-	"errors"
 	"fmt"
+	"net/http"
 	"sync"
 )
 
 type Coder interface {
+	// HTTPStatus that should be used for the associated error code.
+	HTTPStatus() int
+
+	// String error message.
+	String() string
+
+	// Reference returns the detail documents for user.
+	Reference() string
+
+	icoder
+}
+
+type icoder interface {
+	// Code returns the code of the coder
 	Code() int
+}
+
+type defaultCoder struct {
+	code   int
+	status int
+	msg    string
+	ref    string
+}
+
+func (d defaultCoder) Code() int         { return d.code }
+func (d defaultCoder) String() string    { return d.msg }
+func (d defaultCoder) Reference() string { return d.ref }
+func (d defaultCoder) HTTPStatus() int {
+	if d.status == 0 {
+		return http.StatusInternalServerError
+	}
+	return d.status
 }
 
 type causer interface {
 	Cause() error
 }
 
-const (
-	ErrCodeOK      = 0
-	ErrCodeUnknown = 1
-)
-
-// Reserved errors.
 var (
-	// OK error code 0.
-	OK = Register(ErrCodeOK, "OK")
-
-	// ErrUnknown error code 1.
-	ErrUnknown = Register(ErrCodeUnknown, "Unknown Error")
-)
-
-// _codes registered codes.
-var (
-	_codes = make(map[int]struct{})
+	unknownCode = defaultCoder{code: 1, status: http.StatusInternalServerError,
+		msg: "Unknown code"}
+	// _codes registered codes.
+	_codes = make(map[int]Coder)
 	mux    = &sync.Mutex{}
 )
 
-// Registerf registers an error code with the format specifier.
-func Registerf(code int, format string, args ...interface{}) error {
-	register(code)
-	return &withCode{
-		cause: fmt.Errorf(format, args...),
-		code:  code,
+// Register registers an Coder.
+func Register(code Coder) {
+	if code.Code() == unknownCode.Code() {
+		panic(fmt.Sprintf("code `%d` is reserved by `github.com/shipengqi/errors` as Unknown Code", code.Code()))
 	}
+
+	if _, ok := _codes[code.Code()]; ok {
+		panic(fmt.Sprintf("code [%d] already registered", code))
+	}
+
+	mux.Lock()
+	defer mux.Unlock()
+
+	_codes[code.Code()] = code
 }
 
-// Register registers an error code with message.
-func Register(code int, msg string) error {
-	register(code)
-	return &withCode{
-		cause: errors.New(msg),
-		code:  code,
+// ParseCoder parse any error into icoder interface.
+// nil error will return nil direct.
+// None withStack error will be parsed as Unknown Code.
+func ParseCoder(err error) Coder {
+	if err == nil {
+		return nil
 	}
-}
 
-// RegisterC registers a Coder.
-func RegisterC(code Coder) {
-	register(code.Code())
+	if v, ok := err.(icoder); ok {
+		if coder, ok := _codes[v.Code()]; ok {
+			return coder
+		}
+	}
+
+	return unknownCode
 }
 
 // IsCode reports whether any error in err's contains the given code.
 func IsCode(err error, code int) bool {
-	if v, ok := err.(Coder); ok {
+	if v, ok := err.(icoder); ok {
 		if v.Code() == code {
 			return true
 		}
@@ -72,22 +101,15 @@ func IsCode(err error, code int) bool {
 	return false
 }
 
-func register(code int) {
-	if _, ok := _codes[code]; ok {
-		panic(fmt.Sprintf("[%d] already registered", code))
-	}
-
-	mux.Lock()
-	defer mux.Unlock()
-
-	_codes[code] = struct{}{}
-}
-
-func unregister(code int) {
-	if _, ok := _codes[code]; ok {
+func unregister(code Coder) {
+	if _, ok := _codes[code.Code()]; ok {
 		mux.Lock()
 		defer mux.Unlock()
 
-		delete(_codes, code)
+		delete(_codes, code.Code())
 	}
+}
+
+func init() {
+	_codes[unknownCode.Code()] = unknownCode
 }
