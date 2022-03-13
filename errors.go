@@ -332,6 +332,15 @@ func WithCode(err error, code int) error {
 	}
 }
 
+// Codef returns a code error with the format specifier.
+func Codef(code int, format string, args ...interface{}) error {
+	return &withCode{
+		cause: fmt.Errorf(format, args...),
+		code:  code,
+		stack: callers(),
+	}
+}
+
 // WrapC returns an error annotating err with a code and a stack trace
 // at the point WrapC is called, and the format specifier.
 // If err is nil, WrapC returns nil.
