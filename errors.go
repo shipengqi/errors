@@ -291,6 +291,7 @@ func Cause(err error) error {
 type withCode struct {
 	cause error
 	code  int
+	*stack
 }
 
 func (w *withCode) Error() string {
@@ -331,9 +332,19 @@ func WithCode(err error, code int) error {
 	}
 }
 
-// WithCodef annotates err with code and the format specifier.
-// If err is nil, WithCodef returns nil.
-func WithCodef(err error, code int, format string, args ...interface{}) error {
+// Codef returns a code error with the format specifier.
+func Codef(code int, format string, args ...interface{}) error {
+	return &withCode{
+		cause: fmt.Errorf(format, args...),
+		code:  code,
+		stack: callers(),
+	}
+}
+
+// WrapC returns an error annotating err with a code and a stack trace
+// at the point WrapC is called, and the format specifier.
+// If err is nil, WrapC returns nil.
+func WrapC(err error, code int, format string, args ...interface{}) error {
 	if err == nil {
 		return nil
 	}
@@ -342,7 +353,8 @@ func WithCodef(err error, code int, format string, args ...interface{}) error {
 		msg:   fmt.Sprintf(format, args...),
 	}
 	return &withCode{
-		cause: cause,
 		code:  code,
+		cause: cause,
+		stack: callers(),
 	}
 }

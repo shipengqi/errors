@@ -225,20 +225,21 @@ func TestWithMessagef(t *testing.T) {
 }
 
 func TestWithCode(t *testing.T) {
+	errUnknown := WithCode(errors.New(unknown), 1)
 	type run struct {
 		expected bool
 		code     int
 		err      error
 	}
 	tests := []run{
-		{true, 1, ErrUnknown},
-		{true, 1, WithCode(ErrUnknown, 2)},
+		{true, 1, errUnknown},
+		{true, 1, WithCode(errUnknown, 2)},
 		{true, 1, WithCode(New("test1"), 1)},
 		{true, 1, WithCode(WithMessage(New("test2"), "msg2"), 1)},
-		{true, 1, WithMessage(ErrUnknown, "msg3")},
-		{true, 1, WithMessage(WithCode(ErrUnknown, 2), "msg4")},
-		{true, 1, Wrap(ErrUnknown, "msg5")},
-		{true, 1, Wrap(WithCode(WithCode(ErrUnknown, 2), 3), "msg6")},
+		{true, 1, WithMessage(errUnknown, "msg3")},
+		{true, 1, WithMessage(WithCode(errUnknown, 2), "msg4")},
+		{true, 1, Wrap(errUnknown, "msg5")},
+		{true, 1, Wrap(WithCode(WithCode(errUnknown, 2), 3), "msg6")},
 	}
 
 	for _, tt := range tests {
@@ -250,20 +251,21 @@ func TestWithCode(t *testing.T) {
 }
 
 func TestWithCodef(t *testing.T) {
+	errUnknown := WithCode(errors.New(unknown), 1)
 	type run struct {
 		expected bool
 		code     int
 		err      error
 	}
 	tests := []run{
-		{true, 1, ErrUnknown},
-		{true, 1, WithCodef(ErrUnknown, 2, "format %s", "value")},
-		{true, 1, WithCodef(New("test1"), 1, "format1 %s", "value1")},
-		{true, 1, WithCodef(WithMessage(New("test2"), "msg2"), 1, "format2 %s", "value2")},
-		{true, 1, WithMessage(ErrUnknown, "msg3")},
-		{true, 1, WithMessage(WithCodef(ErrUnknown, 2, "format4 %s", "value4"), "msg4")},
-		{true, 1, Wrap(ErrUnknown, "msg5")},
-		{true, 1, Wrap(WithCodef(WithCode(ErrUnknown, 2), 3, "format6 %s", "value6"), "msg6")},
+		{true, 1, errUnknown},
+		{true, 1, WrapC(errUnknown, 2, "format %s", "value")},
+		{true, 1, WrapC(New("test1"), 1, "format1 %s", "value1")},
+		{true, 1, WrapC(WithMessage(New("test2"), "msg2"), 1, "format2 %s", "value2")},
+		{true, 1, WithMessage(errUnknown, "msg3")},
+		{true, 1, WithMessage(WrapC(errUnknown, 2, "format4 %s", "value4"), "msg4")},
+		{true, 1, Wrap(errUnknown, "msg5")},
+		{true, 1, Wrap(WrapC(WithCode(errUnknown, 2), 3, "format6 %s", "value6"), "msg6")},
 	}
 
 	for _, tt := range tests {
