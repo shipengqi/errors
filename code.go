@@ -47,7 +47,7 @@ type causer interface {
 
 var (
 	unknownCode = defaultCoder{code: 1, status: http.StatusInternalServerError,
-		msg: "Unknown code"}
+		msg: "Internal server error"}
 	// _codes registered codes.
 	_codes = make(map[int]Coder)
 	mux    = &sync.Mutex{}
