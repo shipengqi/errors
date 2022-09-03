@@ -43,6 +43,36 @@ func TestStringSet(t *testing.T)  {
 	}
 }
 
+func TestStringSetPopAny(t *testing.T)  {
+	s := String{}
+	if len(s) != 0 {
+		t.Errorf("Expected len=0: %d", len(s))
+	}
+	s.Insert("a", "b")
+	if len(s) != 2 {
+		t.Errorf("Expected len=2: %d", len(s))
+	}
+	popped, _ := s.PopAny()
+	if popped == "" {
+		t.Error("Expected not empty")
+	}
+}
+
+func TestStringSetUnsortedList(t *testing.T)  {
+	s := String{}
+	if len(s) != 0 {
+		t.Errorf("Expected len=0: %d", len(s))
+	}
+	s.Insert("a", "b")
+	if len(s) != 2 {
+		t.Errorf("Expected len=2: %d", len(s))
+	}
+	list := s.UnsortedList()
+	if len(list) != 2 {
+		t.Errorf("Expected len=2: %d", len(s))
+	}
+}
+
 func TestStringSetDeleteMultiples(t *testing.T) {
 	s := String{}
 	s.Insert("a", "b", "c")

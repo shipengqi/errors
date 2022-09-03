@@ -333,6 +333,11 @@ func TestCreateAggregateFromMessageCountMap(t *testing.T) {
 			MessageCountMap{"ghi": 1, "abc": 2},
 			aggregate{fmt.Errorf("abc (repeated 2 times)"), fmt.Errorf("ghi")},
 		},
+		{
+			"input nil",
+			nil,
+			nil,
+		},
 	}
 
 	var expected, agg []error
@@ -349,6 +354,50 @@ func TestCreateAggregateFromMessageCountMap(t *testing.T) {
 			if !reflect.DeepEqual(expected, agg) {
 				t.Errorf("expected %v, got %v", expected, agg)
 			}
+		})
+	}
+}
+
+func TestReduce(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    error
+		expected error
+	}{
+		{
+			"input an Aggregate and only has one item",
+			aggregate{fmt.Errorf("abc")},
+			fmt.Errorf("abc"),
+		},
+		{
+			"input an Aggregate without item",
+			aggregate{},
+			nil,
+		},
+		{
+			"input an error",
+			fmt.Errorf("abc"),
+			fmt.Errorf("abc"),
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			got := Reduce(testCase.input)
+			if testCase.expected != nil {
+				expectedStr := testCase.expected.Error()
+				if got == nil {
+					t.Errorf("expected %v, got nil", expectedStr)
+				}
+				if expectedStr != got.Error() {
+					t.Errorf("expected %v, got %s", expectedStr, got.Error())
+				}
+			} else {
+				if got != nil {
+					t.Error("expected nil, got nil")
+				}
+			}
+
 		})
 	}
 }
