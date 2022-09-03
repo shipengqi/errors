@@ -51,7 +51,7 @@ func TestRegisterPanic(t *testing.T) {
 func TestRegisterPanic2(t *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			assert.Equal(t, err, "code [3] already registered")
+			assert.Equal(t, err, "code `3` already registered")
 		} else {
 			t.Fatal("no panic")
 		}
