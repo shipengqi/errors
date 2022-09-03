@@ -45,10 +45,10 @@ func TestStringSet(t *testing.T)  {
 
 func TestStringKeySet(t *testing.T)  {
 	str := StringKeySet(map[string]string{
-		"a": "valuea",
+		"a": "",
 		"b": "valueb",
 	})
-	if !str.Has("valuea") || !str.Has("valueb")  {
+	if !str.Has("a") || !str.Has("b")  {
 		t.Errorf("Unexpected contents: %#v", str)
 	}
 }
