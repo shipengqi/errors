@@ -347,6 +347,12 @@ func TestCreateAggregateFromMessageCountMap(t *testing.T) {
 				expected = testCase.expected.Errors()
 				sort.Slice(expected, func(i, j int) bool { return expected[i].Error() < expected[j].Error() })
 			}
+			if testCase.expected == nil {
+				got := CreateAggregateFromMessageCountMap(testCase.mcm)
+				if got != nil {
+					t.Errorf("expected nil, got %v", got)
+				}
+			}
 			if testCase.mcm != nil {
 				agg = CreateAggregateFromMessageCountMap(testCase.mcm).Errors()
 				sort.Slice(agg, func(i, j int) bool { return agg[i].Error() < agg[j].Error() })
