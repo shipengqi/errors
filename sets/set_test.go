@@ -43,18 +43,32 @@ func TestStringSet(t *testing.T)  {
 	}
 }
 
+func TestStringKeySet(t *testing.T)  {
+	str := StringKeySet(map[string]string{
+		"a": "valuea",
+		"b": "valueb",
+	})
+	if !str.Has("valuea") || !str.Has("valueb")  {
+		t.Errorf("Unexpected contents: %#v", str)
+	}
+}
+
 func TestStringSetPopAny(t *testing.T)  {
 	s := String{}
 	if len(s) != 0 {
 		t.Errorf("Expected len=0: %d", len(s))
 	}
-	s.Insert("a", "b")
-	if len(s) != 2 {
-		t.Errorf("Expected len=2: %d", len(s))
+	s.Insert("a")
+	if len(s) != 1 {
+		t.Errorf("Expected len=1: %d", len(s))
 	}
 	popped, _ := s.PopAny()
 	if popped == "" {
 		t.Error("Expected not empty")
+	}
+	popped, _ = s.PopAny()
+	if popped != "" {
+		t.Error("Expected empty")
 	}
 }
 
