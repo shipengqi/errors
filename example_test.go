@@ -46,7 +46,15 @@ func ExampleWithCode() {
 	err := WithCode(cause, 1)
 	fmt.Println(err)
 
-	// Output: code: 1: whoops
+	// Output: whoops
+}
+
+func ExampleWithCode_printf() {
+	cause := New("whoops")
+	err := WithCode(cause, 1)
+	fmt.Printf("%+v", err)
+
+	// Output: code: 1, whoops
 }
 
 func ExampleWrapC() {
@@ -54,7 +62,8 @@ func ExampleWrapC() {
 	err := WrapC(cause, 1, "oh %s", "noes")
 	fmt.Println(err)
 
-	// Output: code: 1: oh noes: whoops
+	// Output: oh noes: whoops
+	// github.com/shipengqi/errors.ExampleWithCode_printf
 }
 
 func ExampleWithStack() {
