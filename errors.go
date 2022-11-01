@@ -295,7 +295,7 @@ type withCode struct {
 }
 
 func (w *withCode) Error() string {
-	return fmt.Sprintf("code: %d: %s", w.code, w.cause.Error())
+	return w.cause.Error()
 }
 
 func (w *withCode) Cause() error { return w.cause }
@@ -309,9 +309,10 @@ func (w *withCode) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
-			_, _ = fmt.Fprintf(s, "%+v\n", w.Cause())
 			_, _ = io.WriteString(s, "code: ")
 			_, _ = io.WriteString(s, strconv.Itoa(w.code))
+			_, _ = io.WriteString(s, ", ")
+			_, _ = fmt.Fprintf(s, "%+v\n", w.Cause())
 			return
 		}
 		fallthrough
@@ -329,6 +330,7 @@ func WithCode(err error, code int) error {
 	return &withCode{
 		cause: err,
 		code:  code,
+		stack: callers(),
 	}
 }
 
