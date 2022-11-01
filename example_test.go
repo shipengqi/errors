@@ -55,6 +55,20 @@ func ExampleWithCode_printf() {
 	fmt.Printf("%+v", err)
 
 	// Output: code: 1, whoops
+	// github.com/shipengqi/errors.ExampleWithCode_printf
+	//	/home/runner/work/errors/errors/example_test.go:53
+	// testing.runExample
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/run_example.go:64
+	// testing.runExamples
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/example.go:44
+	// testing.(*M).Run
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/testing.go:1505
+	// main.main
+	//	_testmain.go:231
+	// runtime.main
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/runtime/proc.go:255
+	// runtime.goexit
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/runtime/asm_amd64.s:1581
 }
 
 func ExampleWrapC() {
@@ -63,7 +77,6 @@ func ExampleWrapC() {
 	fmt.Println(err)
 
 	// Output: oh noes: whoops
-	// github.com/shipengqi/errors.ExampleWithCode_printf
 }
 
 func ExampleWithStack() {
