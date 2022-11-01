@@ -109,5 +109,7 @@ func TestParseCoder(t *testing.T) {
 
 func TestCodef(t *testing.T) {
 	err := Codef(3, "test codef")
-	assert.Equal(t, "code: 3: test codef", err.Error())
+	assert.Equal(t, "test codef", err.Error())
+	full := fmt.Sprintf("%+v", err)
+	assert.Contains(t, full, "code: 3, test codef")
 }

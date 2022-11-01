@@ -295,7 +295,7 @@ type withCode struct {
 }
 
 func (w *withCode) Error() string {
-	return fmt.Sprintf("%v", w)
+	return w.cause.Error()
 }
 
 func (w *withCode) Cause() error { return w.cause }
