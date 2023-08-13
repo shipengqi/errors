@@ -7,6 +7,7 @@ Based on [github.com/pkg/errors](https://github.com/pkg/errors), and fully compa
 
 [![CI](https://github.com/shipengqi/errors/actions/workflows/ci.yml/badge.svg)](https://github.com/shipengqi/errors/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/shipengqi/errors/branch/main/graph/badge.svg?token=SMU4SI304O)](https://codecov.io/gh/shipengqi/errors)
+[![Go Report Card](https://goreportcard.com/badge/github.com/shipengqi/errors)](https://goreportcard.com/report/github.com/shipengqi/errors)
 [![release](https://img.shields.io/github/release/shipengqi/errors.svg)](https://github.com/shipengqi/errors/releases)
 [![license](https://img.shields.io/github/license/shipengqi/errors)](https://github.com/shipengqi/errors/blob/main/LICENSE)
 
