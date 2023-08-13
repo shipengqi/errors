@@ -5,7 +5,7 @@ Migrated from [golib](https://github.com/shipengqi/golib).
 
 Based on [github.com/pkg/errors](https://github.com/pkg/errors), and fully compatible with `github.com/pkg/errors`.
 
-[![CI](https://github.com/shipengqi/errors/actions/workflows/ci.yml/badge.svg)](https://github.com/shipengqi/errors/actions/workflows/ci.yml)
+[![test](https://github.com/shipengqi/errors/actions/workflows/test.yaml/badge.svg)](https://github.com/shipengqi/errors/actions/workflows/test.yaml)
 [![codecov](https://codecov.io/gh/shipengqi/errors/branch/main/graph/badge.svg?token=SMU4SI304O)](https://codecov.io/gh/shipengqi/errors)
 [![Go Report Card](https://goreportcard.com/badge/github.com/shipengqi/errors)](https://goreportcard.com/report/github.com/shipengqi/errors)
 [![release](https://img.shields.io/github/release/shipengqi/errors.svg)](https://github.com/shipengqi/errors/releases)
