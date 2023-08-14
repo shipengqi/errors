@@ -58,7 +58,7 @@ func ExampleWithCode_printf() {
 	// github.com/shipengqi/errors.ExampleWithCode_printf
 	//	/home/runner/work/errors/errors/example_test.go:53
 	// testing.runExample
-	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/run_example.go:64
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/run_example.go:63
 	// testing.runExamples
 	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/example.go:44
 	// testing.(*M).Run
