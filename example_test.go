@@ -62,13 +62,13 @@ func ExampleWithCode_printf() {
 	// testing.runExamples
 	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/example.go:44
 	// testing.(*M).Run
-	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/testing.go:1505
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/testing/testing.go:1927
 	// main.main
-	//	_testmain.go:231
+	//	_testmain.go:213
 	// runtime.main
-	//	/opt/hostedtoolcache/go/1.17.13/x64/src/runtime/proc.go:255
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/runtime/proc.go:267
 	// runtime.goexit
-	//	/opt/hostedtoolcache/go/1.17.13/x64/src/runtime/asm_amd64.s:1581
+	//	/opt/hostedtoolcache/go/1.17.13/x64/src/runtime/asm_amd64.s:1650
 }
 
 func ExampleWrapC() {
