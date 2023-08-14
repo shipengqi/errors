@@ -5,8 +5,6 @@ import (
 	"testing"
 
 	stderrors "errors"
-
-	pkgerrors "github.com/pkg/errors"
 )
 
 func stdErrors(at, depth int) error {
@@ -16,11 +14,11 @@ func stdErrors(at, depth int) error {
 	return stdErrors(at+1, depth)
 }
 
-func pkgErrors(at, depth int) error {
+func myErrorsWithoutCode(at, depth int) error {
 	if at >= depth {
-		return pkgerrors.New("no error")
+		return New("no error")
 	}
-	return pkgErrors(at+1, depth)
+	return myErrorsWithoutCode(at+1, depth)
 }
 
 func myErrors(at, depth int) error {
@@ -41,13 +39,10 @@ func BenchmarkErrors(b *testing.B) {
 	}
 	runs := []run{
 		{10, "std"},
-		{10, "pkg"},
 		{10, "errors"},
 		{100, "std"},
-		{100, "pkg"},
 		{100, "errors"},
 		{1000, "std"},
-		{1000, "pkg"},
 		{1000, "errors"},
 	}
 	for _, r := range runs {
@@ -57,9 +52,6 @@ func BenchmarkErrors(b *testing.B) {
 		case "std":
 			part = "errors"
 			f = stdErrors
-		case "pkg":
-			part = "pkg/errors"
-			f = pkgErrors
 		case "errors":
 			part = "my/errors"
 			f = myErrors
@@ -112,7 +104,7 @@ func BenchmarkStackFormatting(b *testing.B) {
 	for _, r := range runs {
 		name := fmt.Sprintf("%s-stacktrace-%d", r.format, r.stack)
 		b.Run(name, func(b *testing.B) {
-			err := stdErrors(0, r.stack)
+			err := myErrorsWithoutCode(0, r.stack)
 			st := err.(*fundamental).stack.StackTrace()
 			b.ReportAllocs()
 			b.ResetTimer()

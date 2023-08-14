@@ -99,6 +99,7 @@ func IsCode(err error, code int) bool {
 	return false
 }
 
+//nolint:unused
 func unregister(code Coder) {
 	if _, ok := _codes[code.Code()]; ok {
 		mux.Lock()
