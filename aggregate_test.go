@@ -77,7 +77,7 @@ func TestAggregateWithNil(t *testing.T) {
 }
 
 func TestSingularAggregate(t *testing.T) {
-	var slice []error = []error{fmt.Errorf("err")}
+	var slice = []error{fmt.Errorf("err")}
 	var agg Aggregate
 	var err error
 
@@ -105,7 +105,7 @@ func TestSingularAggregate(t *testing.T) {
 }
 
 func TestPluralAggregate(t *testing.T) {
-	var slice []error = []error{fmt.Errorf("abc"), fmt.Errorf("123")}
+	var slice = []error{fmt.Errorf("abc"), fmt.Errorf("123")}
 	var agg Aggregate
 	var err error
 
@@ -133,7 +133,7 @@ func TestPluralAggregate(t *testing.T) {
 }
 
 func TestDedupeAggregate(t *testing.T) {
-	var slice []error = []error{fmt.Errorf("abc"), fmt.Errorf("abc")}
+	var slice = []error{fmt.Errorf("abc"), fmt.Errorf("abc")}
 	var agg Aggregate
 
 	agg = NewAggregate(slice)
@@ -149,7 +149,7 @@ func TestDedupeAggregate(t *testing.T) {
 }
 
 func TestDedupePluralAggregate(t *testing.T) {
-	var slice []error = []error{fmt.Errorf("abc"), fmt.Errorf("abc"), fmt.Errorf("123")}
+	var slice = []error{fmt.Errorf("abc"), fmt.Errorf("abc"), fmt.Errorf("123")}
 	var agg Aggregate
 
 	agg = NewAggregate(slice)
@@ -165,7 +165,7 @@ func TestDedupePluralAggregate(t *testing.T) {
 }
 
 func TestFlattenAndDedupeAggregate(t *testing.T) {
-	var slice []error = []error{fmt.Errorf("abc"), fmt.Errorf("abc"), NewAggregate([]error{fmt.Errorf("abc")})}
+	var slice = []error{fmt.Errorf("abc"), fmt.Errorf("abc"), NewAggregate([]error{fmt.Errorf("abc")})}
 	var agg Aggregate
 
 	agg = NewAggregate(slice)
@@ -181,7 +181,7 @@ func TestFlattenAndDedupeAggregate(t *testing.T) {
 }
 
 func TestFlattenAggregate(t *testing.T) {
-	var slice []error = []error{fmt.Errorf("abc"), fmt.Errorf("abc"), NewAggregate([]error{fmt.Errorf("abc"), fmt.Errorf("def"), NewAggregate([]error{fmt.Errorf("def"), fmt.Errorf("ghi")})})}
+	var slice = []error{fmt.Errorf("abc"), fmt.Errorf("abc"), NewAggregate([]error{fmt.Errorf("abc"), fmt.Errorf("def"), NewAggregate([]error{fmt.Errorf("def"), fmt.Errorf("ghi")})})}
 	var agg Aggregate
 
 	agg = NewAggregate(slice)
@@ -566,4 +566,18 @@ func TestErrConfigurationInvalidWithErrorsIsShortCircuitsOnFirstMatch(t *testing
 	if numAccessed != 1 {
 		t.Errorf("expected exactly one error to get accessed, got %d", numAccessed)
 	}
+}
+
+func ExampleNewAggregate() {
+	var errs []error
+	errs = append(errs,
+		errors.New("error 1"),
+		errors.New("error 2"),
+		errors.New("error 3"),
+	)
+
+	aggregate := NewAggregate(errs)
+	fmt.Println(aggregate.Error())
+	// Output:
+	// [error 1, error 2, error 3]
 }
