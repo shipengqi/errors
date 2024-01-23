@@ -3,9 +3,8 @@ package errors
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRegister(t *testing.T) {
@@ -17,25 +16,35 @@ func TestRegister(t *testing.T) {
 	Register(mockSuccessCode)
 	defer unregister(mockSuccessCode)
 
-	assert.Equal(t, "SUCCESS", mockSuccessCode.String())
-	assert.Equal(t, 200, mockSuccessCode.HTTPStatus())
-	assert.Equal(t, "", mockSuccessCode.Reference())
+	if "SUCCESS" != mockSuccessCode.String() {
+		t.Errorf("code string: want: %s, got: %s", "SUCCESS", mockSuccessCode.String())
+	}
+	if 200 != mockSuccessCode.HTTPStatus() {
+		t.Errorf("code http status: want: %d, got: %d", 200, mockSuccessCode.HTTPStatus())
+	}
+	if "" != mockSuccessCode.Reference() {
+		t.Errorf("code reference: want: %s, got: %s", "", mockSuccessCode.Reference())
+	}
 
 	t.Run("HTTP status 0", func(t *testing.T) {
 		mockSuccessCode2 := defaultCoder{
-			code:   3,
-			msg:    "SUCCESS",
+			code: 3,
+			msg:  "SUCCESS",
 		}
 		Register(mockSuccessCode2)
 		defer unregister(mockSuccessCode2)
-		assert.Equal(t, 500, mockSuccessCode2.HTTPStatus())
+		if 500 != mockSuccessCode2.HTTPStatus() {
+			t.Errorf("code http status: want: %d, got: %d", 500, mockSuccessCode2.HTTPStatus())
+		}
 	})
 }
 
 func TestRegisterPanic(t *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			assert.Equal(t, err, "code `1` is reserved by `github.com/shipengqi/errors` as Unknown Code")
+			if err != "code `1` is reserved by `github.com/shipengqi/errors` as Unknown Code" {
+				t.Errorf("code string: want: %s, got: %s", "code `1` is reserved by `github.com/shipengqi/errors` as Unknown Code", err)
+			}
 		} else {
 			t.Fatal("no panic")
 		}
@@ -51,7 +60,9 @@ func TestRegisterPanic(t *testing.T) {
 func TestRegisterPanic2(t *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			assert.Equal(t, err, "code `3` already registered")
+			if err != "code `3` already registered" {
+				t.Errorf("code string: want: %s, got: %s", "code `3` already registered", err)
+			}
 		} else {
 			t.Fatal("no panic")
 		}
@@ -90,26 +101,39 @@ func TestIsCode(t *testing.T) {
 	}
 	for _, r := range runs {
 		got := IsCode(r.err, r.code)
-		assert.Equal(t, got, r.expected, fmt.Sprintf("IsCode(%s, %d)", r.err.Error(), r.code))
+		if got != r.expected {
+			t.Errorf("IsCode: want: %v, got: %v", r.expected, got)
+		}
 	}
 }
 
 func TestParseCoder(t *testing.T) {
 	errUnknown := WithCode(errors.New(unknown), 1)
 	err := ParseCoder(errUnknown)
-	assert.Equal(t, unknownCode, err)
+	if err != unknownCode {
+		t.Errorf("ParseCoder: want: unknown, got: %s", err)
+	}
 
 	err = ParseCoder(nil)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Errorf("ParseCoder: want: nil, got: %s", err)
+	}
 
 	errUnknown2 := WithCode(errors.New(unknown), 2)
 	err = ParseCoder(errUnknown2)
-	assert.Equal(t, unknownCode, err)
+	if err != unknownCode {
+		t.Errorf("ParseCoder: want: unknown, got: %s", err)
+	}
 }
 
 func TestCodef(t *testing.T) {
 	err := Codef(3, "test codef")
-	assert.Equal(t, "test codef", err.Error())
+	if err.Error() != "test codef" {
+		t.Errorf("Codef: want: test codef, got: %s", err)
+	}
+
 	full := fmt.Sprintf("%+v", err)
-	assert.Contains(t, full, "code: 3, test codef")
+	if !strings.Contains(full, "code: 3, test codef") {
+		t.Errorf("Codef: want: code: 3, test codef, got: %s", full)
+	}
 }
