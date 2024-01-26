@@ -145,7 +145,7 @@ func TestStackTrace(t *testing.T) {
 				return Errorf("hello %s", fmt.Sprintf("world: %s", "ooh"))
 			}()
 		}()), []string{
-			`github.com/shipengqi/errors.TestStackTrace.func2.1` +
+			`github.com/shipengqi/errors.TestStackTrace.TestStackTrace.func2.func3` +
 				"\n\t.+/errors/stack_test.go:145", // this is the stack of Errorf
 			`github.com/shipengqi/errors.TestStackTrace.func2` +
 				"\n\t.+/errors/stack_test.go:146", // this is the stack of Errorf's caller
