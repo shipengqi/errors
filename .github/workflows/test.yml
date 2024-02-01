@@ -27,7 +27,7 @@ jobs:
       - name: unit test
         run: go test -v -coverprofile=coverage.out ./...
       - name: codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: unittests
           fail_ci_if_error: true
