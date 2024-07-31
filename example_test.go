@@ -15,7 +15,7 @@ func ExampleNew_printf() {
 	err := New("whoops")
 	fmt.Printf("%+v", err)
 
-	// Output:
+	// Example Output:
 	// whoops
 	// github.com/pkg/errors_test.ExampleNew_printf
 	//         /home/dfc/src/github.com/pkg/errors/example_test.go:15
@@ -86,7 +86,7 @@ func ExampleWithStack_printf() {
 	err := WithStack(cause)
 	fmt.Printf("%+v", err)
 
-	// Output:
+	// Example Output:
 	// whoops
 	// github.com/pkg/errors_test.ExampleWithStack_printf
 	//         /home/fabstu/go/src/github.com/pkg/errors/example_test.go:55
@@ -146,7 +146,7 @@ func ExampleWrap_extended() {
 	err := fn()
 	fmt.Printf("%+v\n", err)
 
-	// Output:
+	// Example Output:
 	// error
 	// github.com/pkg/errors_test.fn
 	//         /home/dfc/src/github.com/pkg/errors/example_test.go:47
@@ -184,7 +184,7 @@ func ExampleErrorf_extended() {
 	err := Errorf("whoops: %s", "foo")
 	fmt.Printf("%+v", err)
 
-	// Output:
+	// Example Output:
 	// whoops: foo
 	// github.com/pkg/errors_test.ExampleErrorf
 	//         /home/dfc/src/github.com/pkg/errors/example_test.go:101
