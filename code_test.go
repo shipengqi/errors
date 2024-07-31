@@ -137,3 +137,45 @@ func TestParseCoder(t *testing.T) {
 		t.Errorf("ParseCoder: want: 2, got: %s", err)
 	}
 }
+
+func TestParseCoderRecursively(t *testing.T) {
+	codes := []Coder{
+		defaultCoder{
+			code:   10010,
+			status: 200,
+			msg:    "SUCCESS",
+		},
+		defaultCoder{
+			code:   10011,
+			status: 200,
+			msg:    "SUCCESS",
+		},
+	}
+	for _, v := range codes {
+		Register(v)
+	}
+
+	defer func() {
+		for _, v := range codes {
+			unregister(v)
+		}
+	}()
+
+	embedErr1 := WithMessage(WithCode(errors.New("embedded"), 10010), "embed1")
+	err := ParseCoder(embedErr1)
+	if err.Code() != 10010 {
+		t.Errorf("ParseCoder: want: 2, got: %s", err)
+	}
+
+	embedErr2 := WithMessage(WithMessage(WithCode(errors.New("embedded"), 10010), "embed1"), "embed2")
+	err = ParseCoder(embedErr2)
+	if err.Code() != 10010 {
+		t.Errorf("ParseCoder: want: 2, got: %s", err)
+	}
+
+	embedErr3 := WithMessage(WithCode(WithCode(errors.New("embedded"), 10010), 10011), "embed2")
+	err = ParseCoder(embedErr3)
+	if err.Code() != 10011 {
+		t.Errorf("ParseCoder: want: 2, got: %s", err)
+	}
+}
