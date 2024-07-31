@@ -346,8 +346,7 @@ func (w *withCode) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
-			_, _ = fmt.Fprintf(s, "%+v\n", w.Cause())
-			_, _ = fmt.Fprintf(s, "code: %d", w.code)
+			_, _ = fmt.Fprintf(s, "code: %d, %+v\n", w.code, w.Cause())
 			return
 		}
 		fallthrough
