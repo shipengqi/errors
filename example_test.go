@@ -15,10 +15,10 @@ func ExampleNew_printf() {
 	err := New("whoops")
 	fmt.Printf("%+v", err)
 
-	// Example output:
+	// Example Output:
 	// whoops
-	// github.com/pkg/errors_test.ExampleNew_printf
-	//         /home/dfc/src/github.com/pkg/errors/example_test.go:17
+	// github.com/shipegnqi/errors_test.ExampleNew_printf
+	//         /home/dfc/src/github.com/shipengqi/errors/example_test.go:15
 	// testing.runExample
 	//         /home/dfc/go/src/testing/example.go:114
 	// testing.RunExamples
@@ -26,7 +26,7 @@ func ExampleNew_printf() {
 	// testing.(*M).Run
 	//         /home/dfc/go/src/testing/testing.go:744
 	// main.main
-	//         /github.com/pkg/errors/_test/_testmain.go:106
+	//         /github.com/shipegnqi/errors/_test/_testmain.go:106
 	// runtime.main
 	//         /home/dfc/go/src/runtime/proc.go:183
 	// runtime.goexit
@@ -46,37 +46,31 @@ func ExampleWithCode() {
 	err := WithCode(cause, 1)
 	fmt.Println(err)
 
-	// Output: whoops
+	// Output: code: 1, whoops
 }
 
-func ExampleWithCode_printf() {
+func ExampleWithCodef() {
 	cause := New("whoops")
-	err := WithCode(cause, 1)
-	fmt.Printf("%+v", err)
-
-	// Example Output: code: 1, whoops
-	// github.com/shipengqi/errors.ExampleWithCode_printf
-	//	/home/runner/work/errors/errors/example_test.go:53
-	// testing.runExample
-	//	/opt/hostedtoolcache/go/src/testing/run_example.go:63
-	// testing.runExamples
-	//	/opt/hostedtoolcache/go/src/testing/example.go:44
-	// testing.(*M).Run
-	//	/opt/hostedtoolcache/go/src/testing/testing.go:1927
-	// main.main
-	//	_testmain.go:213
-	// runtime.main
-	//	/opt/hostedtoolcache/go/src/runtime/proc.go:267
-	// runtime.goexit
-	//	/opt/hostedtoolcache/go/src/runtime/asm_amd64.s:1650
-}
-
-func ExampleWrapC() {
-	cause := New("whoops")
-	err := WrapC(cause, 1, "oh %s", "noes")
+	err := WithCodef(cause, 1, "oh %s", "noes")
 	fmt.Println(err)
 
-	// Output: oh noes: whoops
+	// Output: code: 1, oh noes: whoops
+}
+
+func ExampleWrapCode() {
+	cause := New("whoops")
+	err := WrapCode(cause, 1)
+	fmt.Println(err)
+
+	// Output: code: 1, whoops
+}
+
+func ExampleWrapCodef() {
+	cause := New("whoops")
+	err := WrapCodef(cause, 1, "oh %s", "noes")
+	fmt.Println(err)
+
+	// Output: code: 1, oh noes: whoops
 }
 
 func ExampleWithStack() {
@@ -94,8 +88,8 @@ func ExampleWithStack_printf() {
 
 	// Example Output:
 	// whoops
-	// github.com/pkg/errors_test.ExampleWithStack_printf
-	//         /home/fabstu/go/src/github.com/pkg/errors/example_test.go:55
+	// github.com/shipegnqi/errors_test.ExampleWithStack_printf
+	//         /home/fabstu/go/src/github.com/shipegnqi/errors/example_test.go:55
 	// testing.runExample
 	//         /usr/lib/go/src/testing/example.go:114
 	// testing.RunExamples
@@ -103,13 +97,13 @@ func ExampleWithStack_printf() {
 	// testing.(*M).Run
 	//         /usr/lib/go/src/testing/testing.go:744
 	// main.main
-	//         github.com/pkg/errors/_test/_testmain.go:106
+	//         github.com/shipegnqi/errors/_test/_testmain.go:106
 	// runtime.main
 	//         /usr/lib/go/src/runtime/proc.go:183
 	// runtime.goexit
 	//         /usr/lib/go/src/runtime/asm_amd64.s:2086
-	// github.com/pkg/errors_test.ExampleWithStack_printf
-	//         /home/fabstu/go/src/github.com/pkg/errors/example_test.go:56
+	// github.com/shipegnqi/errors_test.ExampleWithStack_printf
+	//         /home/fabstu/go/src/github.com/shipegnqi/errors/example_test.go:56
 	// testing.runExample
 	//         /usr/lib/go/src/testing/example.go:114
 	// testing.RunExamples
@@ -117,7 +111,7 @@ func ExampleWithStack_printf() {
 	// testing.(*M).Run
 	//         /usr/lib/go/src/testing/testing.go:744
 	// main.main
-	//         github.com/pkg/errors/_test/_testmain.go:106
+	//         github.com/shipegnqi/errors/_test/_testmain.go:106
 	// runtime.main
 	//         /usr/lib/go/src/runtime/proc.go:183
 	// runtime.goexit
@@ -152,12 +146,12 @@ func ExampleWrap_extended() {
 	err := fn()
 	fmt.Printf("%+v\n", err)
 
-	// Example output:
+	// Example Output:
 	// error
-	// github.com/pkg/errors_test.fn
-	//         /home/dfc/src/github.com/pkg/errors/example_test.go:47
-	// github.com/pkg/errors_test.ExampleCause_printf
-	//         /home/dfc/src/github.com/pkg/errors/example_test.go:63
+	// github.com/shipegnqi/errors_test.fn
+	//         /home/dfc/src/github.com/shipegnqi/errors/example_test.go:47
+	// github.com/shipegnqi/errors_test.ExampleCause_printf
+	//         /home/dfc/src/github.com/shipegnqi/errors/example_test.go:63
 	// testing.runExample
 	//         /home/dfc/go/src/testing/example.go:114
 	// testing.RunExamples
@@ -165,17 +159,17 @@ func ExampleWrap_extended() {
 	// testing.(*M).Run
 	//         /home/dfc/go/src/testing/testing.go:744
 	// main.main
-	//         /github.com/pkg/errors/_test/_testmain.go:104
+	//         /github.com/shipegnqi/errors/_test/_testmain.go:104
 	// runtime.main
 	//         /home/dfc/go/src/runtime/proc.go:183
 	// runtime.goexit
 	//         /home/dfc/go/src/runtime/asm_amd64.s:2059
-	// github.com/pkg/errors_test.fn
-	// 	  /home/dfc/src/github.com/pkg/errors/example_test.go:48: inner
-	// github.com/pkg/errors_test.fn
-	//        /home/dfc/src/github.com/pkg/errors/example_test.go:49: middle
-	// github.com/pkg/errors_test.fn
-	//      /home/dfc/src/github.com/pkg/errors/example_test.go:50: outer
+	// github.com/shipegnqi/errors_test.fn
+	// 	  /home/dfc/src/github.com/shipegnqi/errors/example_test.go:48: inner
+	// github.com/shipegnqi/errors_test.fn
+	//        /home/dfc/src/github.com/shipegnqi/errors/example_test.go:49: middle
+	// github.com/shipegnqi/errors_test.fn
+	//      /home/dfc/src/github.com/shipegnqi/errors/example_test.go:50: outer
 }
 
 func ExampleWrapf() {
@@ -190,10 +184,10 @@ func ExampleErrorf_extended() {
 	err := Errorf("whoops: %s", "foo")
 	fmt.Printf("%+v", err)
 
-	// Example output:
+	// Example Output:
 	// whoops: foo
-	// github.com/pkg/errors_test.ExampleErrorf
-	//         /home/dfc/src/github.com/pkg/errors/example_test.go:101
+	// github.com/shipegnqi/errors_test.ExampleErrorf
+	//         /home/dfc/src/github.com/shipegnqi/errors/example_test.go:101
 	// testing.runExample
 	//         /home/dfc/go/src/testing/example.go:114
 	// testing.RunExamples
@@ -201,7 +195,7 @@ func ExampleErrorf_extended() {
 	// testing.(*M).Run
 	//         /home/dfc/go/src/testing/testing.go:744
 	// main.main
-	//         /github.com/pkg/errors/_test/_testmain.go:102
+	//         /github.com/shipegnqi/errors/_test/_testmain.go:102
 	// runtime.main
 	//         /home/dfc/go/src/runtime/proc.go:183
 	// runtime.goexit
@@ -222,10 +216,10 @@ func Example_stackTrace() {
 	fmt.Printf("%+v", st[0:2]) // top two frames
 
 	// Example output:
-	// github.com/pkg/errors_test.fn
-	//	/home/dfc/src/github.com/pkg/errors/example_test.go:47
-	// github.com/pkg/errors_test.Example_stackTrace
-	//	/home/dfc/src/github.com/pkg/errors/example_test.go:127
+	// github.com/shipegnqi/errors_test.fn
+	//	/home/dfc/src/github.com/shipegnqi/errors/example_test.go:47
+	// github.com/shipegnqi/errors_test.Example_stackTrace
+	//	/home/dfc/src/github.com/shipegnqi/errors/example_test.go:127
 }
 
 func ExampleCause_printf() {

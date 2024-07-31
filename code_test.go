@@ -2,8 +2,6 @@ package errors
 
 import (
 	"errors"
-	"fmt"
-	"strings"
 	"testing"
 )
 
@@ -123,17 +121,5 @@ func TestParseCoder(t *testing.T) {
 	err = ParseCoder(errUnknown2)
 	if err != unknownCode {
 		t.Errorf("ParseCoder: want: unknown, got: %s", err)
-	}
-}
-
-func TestCodef(t *testing.T) {
-	err := Codef(3, "test codef")
-	if err.Error() != "test codef" {
-		t.Errorf("Codef: want: test codef, got: %s", err)
-	}
-
-	full := fmt.Sprintf("%+v", err)
-	if !strings.Contains(full, "code: 3, test codef") {
-		t.Errorf("Codef: want: code: 3, test codef, got: %s", full)
 	}
 }

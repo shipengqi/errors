@@ -259,13 +259,13 @@ func TestWithCodef(t *testing.T) {
 	}
 	tests := []run{
 		{true, 1, errUnknown},
-		{true, 1, WrapC(errUnknown, 2, "format %s", "value")},
-		{true, 1, WrapC(New("test1"), 1, "format1 %s", "value1")},
-		{true, 1, WrapC(WithMessage(New("test2"), "msg2"), 1, "format2 %s", "value2")},
+		{true, 1, WrapCodef(errUnknown, 2, "format %s", "value")},
+		{true, 1, WrapCodef(New("test1"), 1, "format1 %s", "value1")},
+		{true, 1, WrapCodef(WithMessage(New("test2"), "msg2"), 1, "format2 %s", "value2")},
 		{true, 1, WithMessage(errUnknown, "msg3")},
-		{true, 1, WithMessage(WrapC(errUnknown, 2, "format4 %s", "value4"), "msg4")},
+		{true, 1, WithMessage(WrapCodef(errUnknown, 2, "format4 %s", "value4"), "msg4")},
 		{true, 1, Wrap(errUnknown, "msg5")},
-		{true, 1, Wrap(WrapC(WithCode(errUnknown, 2), 3, "format6 %s", "value6"), "msg6")},
+		{true, 1, Wrap(WrapCodef(WithCode(errUnknown, 2), 3, "format6 %s", "value6"), "msg6")},
 	}
 
 	for _, tt := range tests {
