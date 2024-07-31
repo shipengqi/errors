@@ -95,7 +95,6 @@ package errors
 import (
 	"fmt"
 	"io"
-	"strconv"
 )
 
 // New returns an error with the supplied message.
@@ -266,6 +265,97 @@ func (w *withMessage) Format(s fmt.State, verb rune) {
 	}
 }
 
+// WrapCode returns an error annotating err with a code and a stack trace
+// at the point WrapCode is called.
+// If err is nil, WrapCode returns nil.
+func WrapCode(err error, code int) error {
+	if err == nil {
+		return nil
+	}
+	err = &withCode{
+		cause: err,
+		code:  code,
+	}
+	return &withStack{
+		err,
+		callers(),
+	}
+}
+
+// WrapCodef returns an error annotating err with a code and a stack trace
+// at the point WrapCodef is called, and the format specifier.
+// If err is nil, WrapCodef returns nil.
+func WrapCodef(err error, code int, format string, args ...interface{}) error {
+	if err == nil {
+		return nil
+	}
+	err = &withCode{
+		cause: &withMessage{
+			cause: err,
+			msg:   fmt.Sprintf(format, args...),
+		},
+		code: code,
+	}
+	return &withStack{
+		err,
+		callers(),
+	}
+}
+
+// WithCode annotates err with a code.
+// If err is nil, WithCode returns nil.
+func WithCode(err error, code int) error {
+	if err == nil {
+		return nil
+	}
+	return &withCode{
+		cause: err,
+		code:  code,
+	}
+}
+
+// WithCodef returns a code error with the format specifier.
+func WithCodef(err error, code int, format string, args ...interface{}) error {
+	if err == nil {
+		return nil
+	}
+	return &withCode{
+		cause: &withMessage{
+			cause: err,
+			msg:   fmt.Sprintf(format, args...),
+		},
+		code: code,
+	}
+}
+
+type withCode struct {
+	cause error
+	code  int
+}
+
+func (w *withCode) Error() string { return fmt.Sprintf("code: %d, %s", w.code, w.cause.Error()) }
+
+func (w *withCode) Cause() error { return w.cause }
+
+// Unwrap provides compatibility for Go 1.13 error chains.
+func (w *withCode) Unwrap() error { return w.cause }
+
+func (w *withCode) Code() int { return w.code }
+
+func (w *withCode) Format(s fmt.State, verb rune) {
+	switch verb {
+	case 'v':
+		if s.Flag('+') {
+			_, _ = fmt.Fprintf(s, "%+v\n", w.Cause())
+			_, _ = fmt.Fprintf(s, "code: %d", w.code)
+			return
+		}
+		fallthrough
+	case 's', 'q':
+		_, _ = io.WriteString(s, w.Error())
+	}
+}
+
 // Cause returns the underlying cause of the error, if possible.
 // An error value has a cause if it implements the following
 // interface:
@@ -286,77 +376,4 @@ func Cause(err error) error {
 		err = cause.Cause()
 	}
 	return err
-}
-
-type withCode struct {
-	cause error
-	code  int
-	*stack
-}
-
-func (w *withCode) Error() string {
-	return w.cause.Error()
-}
-
-func (w *withCode) Cause() error { return w.cause }
-
-// Unwrap provides compatibility for Go 1.13 error chains.
-func (w *withCode) Unwrap() error { return w.cause }
-
-func (w *withCode) Code() int { return w.code }
-
-func (w *withCode) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			_, _ = io.WriteString(s, "code: ")
-			_, _ = io.WriteString(s, strconv.Itoa(w.code))
-			_, _ = io.WriteString(s, ", ")
-			_, _ = fmt.Fprintf(s, "%+v\n", w.Cause())
-			return
-		}
-		fallthrough
-	case 's', 'q':
-		_, _ = io.WriteString(s, w.Error())
-	}
-}
-
-// WithCode annotates err with a code.
-// If err is nil, WithCode returns nil.
-func WithCode(err error, code int) error {
-	if err == nil {
-		return nil
-	}
-	return &withCode{
-		cause: err,
-		code:  code,
-		stack: callers(),
-	}
-}
-
-// Codef returns a code error with the format specifier.
-func Codef(code int, format string, args ...interface{}) error {
-	return &withCode{
-		cause: fmt.Errorf(format, args...),
-		code:  code,
-		stack: callers(),
-	}
-}
-
-// WrapC returns an error annotating err with a code and a stack trace
-// at the point WrapC is called, and the format specifier.
-// If err is nil, WrapC returns nil.
-func WrapC(err error, code int, format string, args ...interface{}) error {
-	if err == nil {
-		return nil
-	}
-	cause := &withMessage{
-		cause: err,
-		msg:   fmt.Sprintf(format, args...),
-	}
-	return &withCode{
-		code:  code,
-		cause: cause,
-		stack: callers(),
-	}
 }

@@ -15,10 +15,10 @@ func ExampleNew_printf() {
 	err := New("whoops")
 	fmt.Printf("%+v", err)
 
-	// Example output:
+	// Output:
 	// whoops
 	// github.com/pkg/errors_test.ExampleNew_printf
-	//         /home/dfc/src/github.com/pkg/errors/example_test.go:17
+	//         /home/dfc/src/github.com/pkg/errors/example_test.go:15
 	// testing.runExample
 	//         /home/dfc/go/src/testing/example.go:114
 	// testing.RunExamples
@@ -46,37 +46,31 @@ func ExampleWithCode() {
 	err := WithCode(cause, 1)
 	fmt.Println(err)
 
-	// Output: whoops
+	// Output: code: 1, whoops
 }
 
-func ExampleWithCode_printf() {
+func ExampleWithCodef() {
 	cause := New("whoops")
-	err := WithCode(cause, 1)
-	fmt.Printf("%+v", err)
-
-	// Example Output: code: 1, whoops
-	// github.com/shipengqi/errors.ExampleWithCode_printf
-	//	/home/runner/work/errors/errors/example_test.go:53
-	// testing.runExample
-	//	/opt/hostedtoolcache/go/src/testing/run_example.go:63
-	// testing.runExamples
-	//	/opt/hostedtoolcache/go/src/testing/example.go:44
-	// testing.(*M).Run
-	//	/opt/hostedtoolcache/go/src/testing/testing.go:1927
-	// main.main
-	//	_testmain.go:213
-	// runtime.main
-	//	/opt/hostedtoolcache/go/src/runtime/proc.go:267
-	// runtime.goexit
-	//	/opt/hostedtoolcache/go/src/runtime/asm_amd64.s:1650
-}
-
-func ExampleWrapC() {
-	cause := New("whoops")
-	err := WrapC(cause, 1, "oh %s", "noes")
+	err := WithCodef(cause, 1, "oh %s", "noes")
 	fmt.Println(err)
 
-	// Output: oh noes: whoops
+	// Output: code: 1, oh noes: whoops
+}
+
+func ExampleWrapCode() {
+	cause := New("whoops")
+	err := WrapCode(cause, 1)
+	fmt.Println(err)
+
+	// Output: code: 1, whoops
+}
+
+func ExampleWrapCodef() {
+	cause := New("whoops")
+	err := WrapCodef(cause, 1, "oh %s", "noes")
+	fmt.Println(err)
+
+	// Output: code: 1, oh noes: whoops
 }
 
 func ExampleWithStack() {
@@ -92,7 +86,7 @@ func ExampleWithStack_printf() {
 	err := WithStack(cause)
 	fmt.Printf("%+v", err)
 
-	// Example Output:
+	// Output:
 	// whoops
 	// github.com/pkg/errors_test.ExampleWithStack_printf
 	//         /home/fabstu/go/src/github.com/pkg/errors/example_test.go:55
@@ -152,7 +146,7 @@ func ExampleWrap_extended() {
 	err := fn()
 	fmt.Printf("%+v\n", err)
 
-	// Example output:
+	// Output:
 	// error
 	// github.com/pkg/errors_test.fn
 	//         /home/dfc/src/github.com/pkg/errors/example_test.go:47
@@ -190,7 +184,7 @@ func ExampleErrorf_extended() {
 	err := Errorf("whoops: %s", "foo")
 	fmt.Printf("%+v", err)
 
-	// Example output:
+	// Output:
 	// whoops: foo
 	// github.com/pkg/errors_test.ExampleErrorf
 	//         /home/dfc/src/github.com/pkg/errors/example_test.go:101
