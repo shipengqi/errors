@@ -74,11 +74,14 @@ func ParseCoder(err error) Coder {
 	if err == nil {
 		return nil
 	}
-
 	if v, ok := err.(icoder); ok {
-		if coder, ok := _codes[v.Code()]; ok {
+		if coder, found := _codes[v.Code()]; found {
 			return coder
 		}
+	}
+	if v, ok := err.(causer); ok {
+		err = v.Cause()
+		return ParseCoder(err)
 	}
 
 	return unknownCode

@@ -122,4 +122,18 @@ func TestParseCoder(t *testing.T) {
 	if err != unknownCode {
 		t.Errorf("ParseCoder: want: unknown, got: %s", err)
 	}
+
+	mockSuccessCode := defaultCoder{
+		code:   10010,
+		status: 200,
+		msg:    "SUCCESS",
+	}
+	Register(mockSuccessCode)
+	defer unregister(mockSuccessCode)
+
+	embedErr1 := WithMessage(WithCode(errors.New("embedded"), 10010), "")
+	err = ParseCoder(embedErr1)
+	if err.Code() != 10010 {
+		t.Errorf("ParseCoder: want: 2, got: %s", err)
+	}
 }
