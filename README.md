@@ -55,10 +55,10 @@ func main() {
 	// reports whether any error in err's contains the given code.
 	fmt.Println(errors.IsCode(codeErr, 20010)) // true
 	
-	// returns a code error with the format specifier.
-	_ = errors.Codef(20011, "codef %s", "demo")
-	// returns an error annotating err with a code and a stack trace at the point WrapC is called, and the format specifier.
-	_ = errors.WrapC(fmt.Errorf("wrap error"), 20012, "wrap %s", "demo")
+	// returns an error annotating err with a code and a stack trace at the point WrapCodef is called.
+	_ = errors.WrapCode(fmt.Errorf("demo error"), 20011)
+	// returns an error annotating err with a code and a stack trace at the point WrapCodef is called, and the format specifier.
+	_ = errors.WrapCodef(fmt.Errorf("wrap error"), 20012, "wrap %s", "demo")
 	
 
 	demoCoder := fakeCoder{
